@@ -1,0 +1,63 @@
+version: "3"
+
+services:
+  client:
+    image: client
+    container_name: client-contacts
+    restart: always
+    # env_file: config.env
+    environment:
+      # DATABASE_CLIENT: ${DATABASE_CLIENT}
+      # DATABASE_NAME: ${DATABASE_NAME}
+      # DATABASE_HOST: ${DATABASE_HOST}
+      DATABASE_PORT: 5050
+      # DATABASE_USERNAME: ${DATABASE_USERNAME}
+      # DATABASE_PASSWORD: ${DATABASE_PASSWORD}
+    networks:
+      - webappnetwork
+    volumes:
+      - ./client:/client
+      - /client/node_modules
+    ports:
+      - "3000:3000"
+    working_dir: /client/src/app
+    entrypoint: ["npm", "start"]
+    links: 
+      - server
+
+  server:
+    image: server
+    container_name: server-contacts
+    restart: always
+    env_file: config.env
+    # environment:
+    #   MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+    #   MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
+    networks:
+      - webappnetwork
+    depends_on:
+      - mongodb
+    volumes:
+      - ./server:/server
+      - /server/node_modules
+    ports:
+      - "5050:5050"
+
+  mongodb:
+        image: mongo
+        restart: always
+        container_name: mongodb
+        volumes:
+            - mongo-data:/data/db
+        ports:
+            - 27017:27017
+        command: mongod --noauth
+        networks:
+            - webappnetwork
+
+networks:
+    webappnetwork:
+        driver: bridge
+volumes:
+  mongo-data:
+    driver: local

@@ -1,0 +1,7 @@
+{
+  "projects": {
+    "default": "gcontacts-demo",
+    "staging": "gcontacts-demo"
+  },
+  "targets": {}
+}
