@@ -2,10 +2,10 @@ version: "3"
 
 services:
   client:
-    image: client
+    image: "client:latest"
     container_name: client-contacts
     restart: always
-    # env_file: config.env
+    env_file: config.env
     environment:
       # DATABASE_CLIENT: ${DATABASE_CLIENT}
       # DATABASE_NAME: ${DATABASE_NAME}
@@ -58,6 +58,10 @@ services:
 networks:
     webappnetwork:
         driver: bridge
+        attachable: true 
+
 volumes:
   mongo-data:
     driver: local
+
+
